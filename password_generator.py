@@ -72,7 +72,7 @@ def generate_passwords_hash_salt(input_file, output_file):
         else:
             try:
                 with open(output_file, mode='a', newline='') as o:
-                    fields = ['passwords', "salt", "hash"]
+                    fields = ['Id', 'First Name', 'Last Name', 'Email', 'Mobile', 'passwords', "salt", "hash"]
                     writer = csv.writer(o)
                     writer.writerow(fields)
                     total_rows = len(file_data)
@@ -82,15 +82,15 @@ def generate_passwords_hash_salt(input_file, output_file):
                             count = 0
                             output_row = []
                             for cell in row:
+                                output_row.append(cell)
                                 if count == 5 and len(cell) != 0:
                                     salt = os.urandom(32)
                                     hashed = hashlib.pbkdf2_hmac("sha256", SECRET_CODE.encode("utf-8"), salt, 100000)
-                                    output_row.append(cell)
                                     output_row.append(binascii.hexlify(salt))
                                     output_row.append(binascii.hexlify(hashed))
-                                # if count == 5 and len(cell) == 0:
-                                #     output_rows.append(cell)
-                                #     output_rows.append("")
+                                if count == 5 and len(cell) == 0:
+                                    output_row.append("")
+                                    output_row.append("")
 
                                 # output_data.append(output_row)
                                 count = count + 1
